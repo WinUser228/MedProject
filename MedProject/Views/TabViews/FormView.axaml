@@ -1,0 +1,837 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:MedProject.ViewModels.TabViewModels"
+             xmlns:converters="clr-namespace:MedProject.Converters"
+             x:Class="MedProject.Views.TabViews.FormView"
+             x:DataType="vm:FormViewModel"
+             x:CompileBindings="False">
+
+  <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveReportEntriesCommand}" />
+    <KeyBinding Gesture="Ctrl+R" Command="{Binding OpenReportSevenCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+R" Command="{Binding OpenReportSevenPart2Command}" />
+  </UserControl.KeyBindings>
+
+  <UserControl.Resources>
+    <converters:DateOnlyToDateTimeConverter x:Key="DateConverter"/>
+    <converters:StringToNullableIntConverter x:Key="StringToNullableIntConverter"/>
+  </UserControl.Resources>
+
+  <UserControl.Styles>
+    <!-- Скрываем автоматический заголовок DataGrid -->
+    <Style Selector="DataGrid DataGridColumnHeader">
+      <Setter Property="IsVisible" Value="False"/>
+      <Setter Property="Height" Value="0"/>
+      <Setter Property="MinHeight" Value="0"/>
+      <Setter Property="Padding" Value="0"/>
+    </Style>
+
+    <!-- Фон и цвет текста строк таблицы -->
+    <Style Selector="DataGrid DataGridRow">
+      <Setter Property="Background" Value="White"/>
+      <Setter Property="Foreground" Value="Black"/>
+      <Setter Property="MinHeight" Value="0"/>
+    </Style>
+    <Style Selector="DataGrid DataGridRow:nth-child(2n)">
+      <Setter Property="Background" Value="#f7fffe"/>
+    </Style>
+    <Style Selector="DataGrid DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+      <Setter Property="Fill" Value="#e0f7fa"/>
+      <Setter Property="Opacity" Value="1"/>
+    </Style>
+    <Style Selector="DataGrid DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+      <Setter Property="Fill" Value="#b2ebf2"/>
+      <Setter Property="Opacity" Value="1"/>
+    </Style>
+
+    <!-- Ячейки: одна линия по вертикали — контент растягивается по высоте строки -->
+    <Style Selector="DataGrid DataGridCell">
+      <Setter Property="Foreground" Value="Black"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="MinHeight" Value="0"/>
+      <!-- Padding делаем 0, чтобы error-border совпадал с границей ячейки -->
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+    </Style>
+    <Style Selector="DataGridCell:focus">
+      <Setter Property="BorderBrush" Value="#1976D2"/>
+      <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+
+    <!-- TextBox внутри ячеек -->
+    <Style Selector="DataGrid DataGridCell TextBox">
+      <Setter Property="Background" Value="White"/>
+      <Setter Property="Foreground" Value="Black"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Padding" Value="2"/>
+      <Setter Property="MinHeight" Value="0"/>
+      <Setter Property="VerticalAlignment" Value="Stretch"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+    <!-- Readonly TextBox in display templates should look like TextBlock -->
+    <Style Selector="DataGrid DataGridCell TextBox[IsReadOnly=true]">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Padding" Value="0"/>
+      <!-- Не перехватываем клики/клавиатуру: иначе DataGrid может не открыть CellEditingTemplate -->
+      <Setter Property="IsHitTestVisible" Value="False"/>
+    </Style>
+    <Style Selector="DataGrid DataGridCell TextBox:focus">
+      <Setter Property="Background" Value="#e3f2fd"/>
+      <Setter Property="BorderBrush" Value="#1976D2"/>
+      <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+    <!-- TextBlock внутри ячеек (readonly) -->
+    <Style Selector="DataGrid DataGridCell TextBlock">
+      <Setter Property="Foreground" Value="Black"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Шапка: TextBox только для отображения — в Avalonia перенос строк надёжнее, чем у TextBlock в узкой ячейке -->
+    <Style Selector="#HeaderGrid TextBox.header-label">
+      <Setter Property="Foreground" Value="Black"/>
+      <Setter Property="FontSize" Value="11"/>
+      <Setter Property="MinWidth" Value="0"/>
+      <Setter Property="MinHeight" Value="0"/>
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="VerticalAlignment" Value="Stretch"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+      <Setter Property="AcceptsReturn" Value="True"/>
+      <Setter Property="IsReadOnly" Value="True"/>
+      <Setter Property="Focusable" Value="False"/>
+      <Setter Property="IsTabStop" Value="False"/>
+      <Setter Property="Cursor" Value="Arrow"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Padding" Value="0"/>
+      <!-- меньше горизонтальных полей — больше места для букв без обрезки -->
+      <Setter Property="Margin" Value="1,2"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Top"/>
+    </Style>
+    <Style Selector="#HeaderGrid Border">
+      <Setter Property="Padding" Value="2,4"/>
+      <Setter Property="ClipToBounds" Value="False"/>
+      <Setter Property="MinWidth" Value="0"/>
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    </Style>
+    <Style Selector="#HeaderGrid Border > Grid">
+      <Setter Property="MinWidth" Value="0"/>
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    </Style>
+    <Style Selector="#HeaderGrid Border.header-valign-center TextBox.header-label">
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+
+  </UserControl.Styles>
+
+  <Grid Margin="10">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <!-- Title -->
+    <StackPanel Grid.Row="0" HorizontalAlignment="Center">
+      <TextBlock Text="Областная детская больница" FontWeight="Bold" FontSize="14"
+                 HorizontalAlignment="Center" Foreground="Black"/>
+      <TextBlock Text="ЛИСТОК УЧЕТА ДВИЖЕНИЯ БОЛЬНЫХ И КОЕЧНОГО ФОНДА СТАЦИОНАРА"
+                 FontWeight="Bold" TextAlignment="Center" TextWrapping="Wrap" Margin="0,5,0,0"
+                 Foreground="Black"/>
+    </StackPanel>
+
+    <!-- Department + Date selector -->
+    <Grid Grid.Row="1" Margin="0,10" HorizontalAlignment="Center" VerticalAlignment="Center">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*" MinWidth="200"/>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="Auto" MinWidth="220"/>
+      </Grid.ColumnDefinitions>
+      <TextBlock Grid.Column="0" Text="Отделение" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="16" Foreground="Black"/>
+      <ComboBox Grid.Column="1"
+                Height="32"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                ItemsSource="{Binding Departments}"
+                SelectedItem="{Binding SelectedDepartment}"
+                DisplayMemberBinding="{Binding DepartmentName}"
+                Margin="0,0,15,0"/>
+      <TextBlock Grid.Column="2" Text="на" VerticalAlignment="Center" FontSize="16" Margin="0,0,10,0" Foreground="Black"/>
+      <CalendarDatePicker Grid.Column="3"
+                          Height="32"
+                          MinWidth="220"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Center"
+                          SelectedDate="{Binding ReportDate, Mode=TwoWay, Converter={StaticResource DateConverter}}"/>
+    </Grid>
+
+    <!-- Custom column headers matching DataGrid columns -->
+    <Grid Grid.Row="2" x:Name="HeaderGrid" Classes="header-grid" Background="White" ClipToBounds="False">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="200" MinWidth="176"/>
+        <ColumnDefinition Width="40*" MinWidth="76"/>
+        <ColumnDefinition Width="100*" MinWidth="128"/>
+        <ColumnDefinition Width="100*"/>
+        <ColumnDefinition Width="45*" MinWidth="50"/>
+        <ColumnDefinition Width="60*" MinWidth="64"/>
+        <ColumnDefinition Width="70*"/>
+        <ColumnDefinition Width="75*"/>
+        <ColumnDefinition Width="75*"/>
+        <ColumnDefinition Width="50*" MinWidth="58"/>
+        <ColumnDefinition Width="100*"/>
+        <ColumnDefinition Width="50*" MinWidth="58"/>
+        <ColumnDefinition Width="60*" MinWidth="64"/>
+        <ColumnDefinition Width="90*"/>
+        <ColumnDefinition Width="70*"/>
+        <ColumnDefinition Width="70*"/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" MinHeight="34"/>
+        <RowDefinition Height="Auto" MinHeight="52"/>
+        <RowDefinition Height="Auto" MinHeight="44"/>
+      </Grid.RowDefinitions>
+
+      <!-- Не использовать header-valign-center: центрирование по вертикали у многострочного TextBox обрезает текст во Fluent -->
+      <Border Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0" VerticalAlignment="Stretch">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+          </Grid.RowDefinitions>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Row="0" Grid.Column="0" Classes="header-label" Text="Название"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0" VerticalAlignment="Stretch">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+          </Grid.RowDefinitions>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Row="0" Grid.Column="0" Classes="header-label" Text="Код"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="0" Grid.RowSpan="3" Grid.Column="2" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0" VerticalAlignment="Stretch">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+          </Grid.RowDefinitions>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Row="0" Grid.Column="0" Classes="header-label" Text="Фактически развернуто коек"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="9" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="Движение больных за истекшие сутки" FontWeight="Bold"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="1" Grid.RowSpan="2" Grid.Column="3" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="Состояло больных на начало истекших суток"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="Поступило больных (без переведенных внутри)"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="2" Grid.Column="4" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="Всего"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="2" Grid.Column="5" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="Сельских жителей"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="2" Grid.Column="6" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="Детей до 14 лет"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="1" Grid.Column="7" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="Переведено больных внутри больницы"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="2" Grid.Column="7" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="Из других отделений"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="2" Grid.Column="8" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="В другие отделения"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="1" Grid.Column="9" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="Выписано больных"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="2" Grid.Column="9" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="Всего"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="2" Grid.Column="10" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="в т.ч. в другие стационары"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="1" Grid.RowSpan="2" Grid.Column="11" Classes="header-valign-center" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="Умерло"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="0" Grid.Column="12" Grid.ColumnSpan="4" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="На начало текущего дня" FontWeight="Bold"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="1" Grid.Column="12" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="Состоит больных"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="2" Grid.Column="12" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="Всего"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="2" Grid.Column="13" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="в т.ч. сельских"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="1" Grid.RowSpan="2" Grid.Column="14" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="Состоит матерей при детях"/>
+        </Grid>
+      </Border>
+      <Border Grid.Row="1" Grid.RowSpan="2" Grid.Column="15" Classes="header-valign-center" BorderBrush="Black" BorderThickness="1">
+        <Grid MinWidth="0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="0"/>
+          </Grid.ColumnDefinitions>
+          <TextBox Grid.Column="0" Classes="header-label" Text="Выписано матерей"/>
+        </Grid>
+      </Border>
+    </Grid>
+
+    <!-- Data entry DataGrid -->
+    <DataGrid Grid.Row="3"
+              x:Name="ReportDataGrid"
+              ItemsSource="{Binding ReportEntries}"
+              AutoGenerateColumns="False"
+              CanUserReorderColumns="False"
+              CanUserResizeColumns="True"
+              CanUserSortColumns="False"
+              SelectionMode="Single"
+              GridLinesVisibility="All"
+              BorderBrush="Black"
+              BorderThickness="1"
+              Background="White"
+              RowBackground="White"
+              Foreground="Black"
+              RowHeight="36"
+              KeyDown="ReportDataGrid_OnKeyDown"
+              PreparingCellForEdit="ReportDataGrid_OnPreparingCellForEdit"
+              PointerPressed="ReportDataGrid_OnPointerPressed"
+              Margin="0,0,0,10">
+      <DataGrid.Columns>
+        <DataGridTemplateColumn Width="200" MinWidth="176" IsReadOnly="True">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="2"/>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Width="40*" MinWidth="76" IsReadOnly="True">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding Code}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2"/>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Width="100*" MinWidth="128" IsReadOnly="True">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding KoikiCount}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2"/>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Width="100*">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Grid ToolTip.Tip="{Binding PatientsAtStartOfDayErrorMessage}">
+                <TextBlock Text="{Binding PatientsAtStartOfDay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
+                        IsVisible="{Binding HasPatientsAtStartOfDayError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+          <DataGridTemplateColumn.CellEditingTemplate>
+            <DataTemplate>
+              <Grid Background="White">
+                <TextBox x:Name="PatientsAtStartOfDayEditor"
+                         Text="{Binding PatientsAtStartOfDay,
+                                        Converter={StaticResource StringToNullableIntConverter},
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="NumericOnlyTextBox_OnTextChanged"
+                         KeyDown="EditorTextBox_OnKeyDown"
+                         HorizontalContentAlignment="Center"/>
+                <Border IsHitTestVisible="False"
+                        BorderBrush="#D32F2F"
+                        BorderThickness="1"
+                        IsVisible="{Binding HasPatientsAtStartOfDayError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellEditingTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Width="50*" MinWidth="58">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Grid ToolTip.Tip="{Binding TotalAdmittedErrorMessage}">
+                <TextBlock Text="{Binding TotalAdmitted}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
+                        IsVisible="{Binding HasTotalAdmittedError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+          <DataGridTemplateColumn.CellEditingTemplate>
+            <DataTemplate>
+              <Grid Background="White">
+                <TextBox x:Name="TotalAdmittedEditor"
+                         Text="{Binding TotalAdmitted,
+                                        Converter={StaticResource StringToNullableIntConverter},
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="NumericOnlyTextBox_OnTextChanged"
+                         KeyDown="EditorTextBox_OnKeyDown"
+                         HorizontalContentAlignment="Center"/>
+                <Border IsHitTestVisible="False"
+                        BorderBrush="#D32F2F"
+                        BorderThickness="1"
+                        IsVisible="{Binding HasTotalAdmittedError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellEditingTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Width="60*" MinWidth="64">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Grid ToolTip.Tip="{Binding FromVillageErrorMessage}">
+                <TextBlock Text="{Binding FromVillage}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
+                        IsVisible="{Binding HasFromVillageError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+          <DataGridTemplateColumn.CellEditingTemplate>
+            <DataTemplate>
+              <Grid Background="White">
+                <TextBox x:Name="FromVillageEditor"
+                         Text="{Binding FromVillage,
+                                        Converter={StaticResource StringToNullableIntConverter},
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="NumericOnlyTextBox_OnTextChanged"
+                         KeyDown="EditorTextBox_OnKeyDown"
+                         HorizontalContentAlignment="Center"/>
+                <Border IsHitTestVisible="False"
+                        BorderBrush="#D32F2F"
+                        BorderThickness="1"
+                        IsVisible="{Binding HasFromVillageError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellEditingTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Width="70*">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Grid ToolTip.Tip="{Binding ChildrenUnder14ErrorMessage}">
+                <TextBlock Text="{Binding ChildrenUnder14}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
+                        IsVisible="{Binding HasChildrenUnder14Error}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+          <DataGridTemplateColumn.CellEditingTemplate>
+            <DataTemplate>
+              <Grid Background="White">
+                <TextBox x:Name="ChildrenUnder14Editor"
+                         Text="{Binding ChildrenUnder14,
+                                        Converter={StaticResource StringToNullableIntConverter},
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="NumericOnlyTextBox_OnTextChanged"
+                         KeyDown="EditorTextBox_OnKeyDown"
+                         HorizontalContentAlignment="Center"/>
+                <Border IsHitTestVisible="False"
+                        BorderBrush="#D32F2F"
+                        BorderThickness="1"
+                        IsVisible="{Binding HasChildrenUnder14Error}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellEditingTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Width="70*">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Grid ToolTip.Tip="{Binding TransferredFromOtherDepartmentsErrorMessage}">
+                <TextBlock Text="{Binding TransferredFromOtherDepartments}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
+                        IsVisible="{Binding HasTransferredFromOtherDepartmentsError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+          <DataGridTemplateColumn.CellEditingTemplate>
+            <DataTemplate>
+              <Grid Background="White">
+                <TextBox x:Name="TransferredFromOtherDepartmentsEditor"
+                         Text="{Binding TransferredFromOtherDepartments,
+                                        Converter={StaticResource StringToNullableIntConverter},
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="NumericOnlyTextBox_OnTextChanged"
+                         KeyDown="EditorTextBox_OnKeyDown"
+                         HorizontalContentAlignment="Center"/>
+                <Border IsHitTestVisible="False"
+                        BorderBrush="#D32F2F"
+                        BorderThickness="1"
+                        IsVisible="{Binding HasTransferredFromOtherDepartmentsError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellEditingTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Width="70*">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Grid ToolTip.Tip="{Binding TransferredToOtherDepartmentsErrorMessage}">
+                <TextBlock Text="{Binding TransferredToOtherDepartments}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
+                        IsVisible="{Binding HasTransferredToOtherDepartmentsError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+          <DataGridTemplateColumn.CellEditingTemplate>
+            <DataTemplate>
+              <Grid Background="White">
+                <TextBox x:Name="TransferredToOtherDepartmentsEditor"
+                         Text="{Binding TransferredToOtherDepartments,
+                                        Converter={StaticResource StringToNullableIntConverter},
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="NumericOnlyTextBox_OnTextChanged"
+                         KeyDown="EditorTextBox_OnKeyDown"
+                         HorizontalContentAlignment="Center"/>
+                <Border IsHitTestVisible="False"
+                        BorderBrush="#D32F2F"
+                        BorderThickness="1"
+                        IsVisible="{Binding HasTransferredToOtherDepartmentsError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellEditingTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Width="50*" MinWidth="58">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Grid ToolTip.Tip="{Binding TotalDischargedErrorMessage}">
+                <TextBlock Text="{Binding TotalDischarged}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
+                        IsVisible="{Binding HasTotalDischargedError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+          <DataGridTemplateColumn.CellEditingTemplate>
+            <DataTemplate>
+              <Grid Background="White">
+                <TextBox x:Name="TotalDischargedEditor"
+                         Text="{Binding TotalDischarged,
+                                        Converter={StaticResource StringToNullableIntConverter},
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="NumericOnlyTextBox_OnTextChanged"
+                         KeyDown="EditorTextBox_OnKeyDown"
+                         HorizontalContentAlignment="Center"/>
+                <Border IsHitTestVisible="False"
+                        BorderBrush="#D32F2F"
+                        BorderThickness="1"
+                        IsVisible="{Binding HasTotalDischargedError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellEditingTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Width="100*">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Grid ToolTip.Tip="{Binding DischargedByTransferErrorMessage}">
+                <TextBlock Text="{Binding DischargedByTransfer}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
+                        IsVisible="{Binding HasDischargedByTransferError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+          <DataGridTemplateColumn.CellEditingTemplate>
+            <DataTemplate>
+              <Grid Background="White">
+                <TextBox x:Name="DischargedByTransferEditor"
+                         Text="{Binding DischargedByTransfer,
+                                        Converter={StaticResource StringToNullableIntConverter},
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="NumericOnlyTextBox_OnTextChanged"
+                         KeyDown="EditorTextBox_OnKeyDown"
+                         HorizontalContentAlignment="Center"/>
+                <Border IsHitTestVisible="False"
+                        BorderBrush="#D32F2F"
+                        BorderThickness="1"
+                        IsVisible="{Binding HasDischargedByTransferError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellEditingTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Width="50*" MinWidth="58">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Grid ToolTip.Tip="{Binding DiedErrorMessage}">
+                <TextBlock Text="{Binding Died}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
+                        IsVisible="{Binding HasDiedError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+          <DataGridTemplateColumn.CellEditingTemplate>
+            <DataTemplate>
+              <Grid Background="White">
+                <TextBox x:Name="DiedEditor"
+                         Text="{Binding Died,
+                                        Converter={StaticResource StringToNullableIntConverter},
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="NumericOnlyTextBox_OnTextChanged"
+                         KeyDown="EditorTextBox_OnKeyDown"
+                         HorizontalContentAlignment="Center"/>
+                <Border IsHitTestVisible="False"
+                        BorderBrush="#D32F2F"
+                        BorderThickness="1"
+                        IsVisible="{Binding HasDiedError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellEditingTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Width="60*" MinWidth="64" IsReadOnly="True">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding TotalPatients}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2"/>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Width="90*">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Grid ToolTip.Tip="{Binding FromVillagePatientErrorMessage}">
+                <TextBlock Text="{Binding FromVillagePatient}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
+                        IsVisible="{Binding HasFromVillagePatientError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+          <DataGridTemplateColumn.CellEditingTemplate>
+            <DataTemplate>
+              <Grid Background="White">
+                <TextBox x:Name="FromVillagePatientEditor"
+                         Text="{Binding FromVillagePatient,
+                                        Converter={StaticResource StringToNullableIntConverter},
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="NumericOnlyTextBox_OnTextChanged"
+                         KeyDown="EditorTextBox_OnKeyDown"
+                         HorizontalContentAlignment="Center"/>
+                <Border IsHitTestVisible="False"
+                        BorderBrush="#D32F2F"
+                        BorderThickness="1"
+                        IsVisible="{Binding HasFromVillagePatientError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellEditingTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Width="70*">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Grid ToolTip.Tip="{Binding MothersWithPatientsErrorMessage}">
+                <TextBlock Text="{Binding MothersWithPatients}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
+                        IsVisible="{Binding HasMothersWithPatientsError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+          <DataGridTemplateColumn.CellEditingTemplate>
+            <DataTemplate>
+              <Grid Background="White">
+                <TextBox x:Name="MothersWithPatientsEditor"
+                         Text="{Binding MothersWithPatients,
+                                        Converter={StaticResource StringToNullableIntConverter},
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="NumericOnlyTextBox_OnTextChanged"
+                         KeyDown="EditorTextBox_OnKeyDown"
+                         HorizontalContentAlignment="Center"/>
+                <Border IsHitTestVisible="False"
+                        BorderBrush="#D32F2F"
+                        BorderThickness="1"
+                        IsVisible="{Binding HasMothersWithPatientsError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellEditingTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn Width="70*">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Grid ToolTip.Tip="{Binding MothersDischargedErrorMessage}">
+                <TextBlock Text="{Binding MothersDischarged}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
+                        IsVisible="{Binding HasMothersDischargedError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+          <DataGridTemplateColumn.CellEditingTemplate>
+            <DataTemplate>
+              <Grid Background="White">
+                <TextBox x:Name="MothersDischargedEditor"
+                         Text="{Binding MothersDischarged,
+                                        Converter={StaticResource StringToNullableIntConverter},
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="NumericOnlyTextBox_OnTextChanged"
+                         KeyDown="EditorTextBox_OnKeyDown"
+                         HorizontalContentAlignment="Center"/>
+                <Border IsHitTestVisible="False"
+                        BorderBrush="#D32F2F"
+                        BorderThickness="1"
+                        IsVisible="{Binding HasMothersDischargedError}"/>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellEditingTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+
+    <!-- Bottom buttons -->
+    <Grid Grid.Row="4" Classes="form-action-bar" Margin="0,10,0,0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+
+      <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+        <Button Content="Отчёт - движение больных"
+                Width="210"
+                Command="{Binding OpenReportSevenCommand}"
+                Margin="0,0,10,0">
+          <ToolTip.Tip>Отчёт — движение больных (Ctrl+R)</ToolTip.Tip>
+        </Button>
+        <Button Content="Отчёт - работа коек"
+                Width="160"
+                Command="{Binding OpenReportSevenPart2Command}"
+                Margin="0,0,10,0">
+          <ToolTip.Tip>Отчёт — работа коек (Ctrl+Shift+R)</ToolTip.Tip>
+        </Button>
+      </StackPanel>
+
+      <Button Grid.Column="1"
+              Classes="primary"
+              Content="Сохранить данные"
+              Width="150"
+              Command="{Binding SaveReportEntriesCommand}"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Center"
+              IsEnabled="{Binding CanSave}">
+        <ToolTip.Tip>Сохранить данные (Ctrl+S)</ToolTip.Tip>
+      </Button>
+    </Grid>
+  </Grid>
+</UserControl>

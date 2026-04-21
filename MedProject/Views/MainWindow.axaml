@@ -1,0 +1,99 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:MedProject.ViewModels"
+        x:Class="MedProject.Views.MainWindow"
+        x:DataType="vm:NavigationViewModel"
+        Icon="avares://MedProject/Assets/iconApp.ico"
+        Title="Коечный учёт"
+        WindowStartupLocation="CenterScreen"
+        MinWidth="1200" MinHeight="600"
+        Width="1400" Height="800">
+
+  <Grid>
+    <Border Background="#c9fffa">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="228" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Navigation Sidebar -->
+        <Border Grid.Column="0" Background="#272B2F" UseLayoutRounding="True"
+                RenderOptions.BitmapInterpolationMode="HighQuality">
+          <StackPanel VerticalAlignment="Top" Margin="0,20,0,0" UseLayoutRounding="True">
+
+            <!-- Ввод данных -->
+            <RadioButton x:Name="NavFormRadio"
+                         Theme="{StaticResource BtnStyle}"
+                         Command="{Binding FormCommand}"
+                         IsChecked="True"
+                         GroupName="NavGroup">
+              <ToolTip.Tip>
+                <StackPanel>
+                  <TextBlock Text="Ввод данных" FontWeight="Bold"/>
+                  <TextBlock Text="Горячая клавиша: Ctrl+1"/>
+                </StackPanel>
+              </ToolTip.Tip>
+              <Grid>
+                <Image Source="avares://MedProject/Design/Image/timetable.png"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Height="30" Width="30" Margin="22,0,0,0" Stretch="Uniform"/>
+                <TextBlock Text="Ввод данных"
+                           VerticalAlignment="Center" HorizontalAlignment="Left"
+                           Foreground="#DBDBDB" FontSize="18" Margin="70,0,0,0"/>
+              </Grid>
+            </RadioButton>
+
+            <!-- Справочники -->
+            <RadioButton x:Name="NavGuideRadio"
+                         Theme="{StaticResource BtnStyle}"
+                         Command="{Binding GuideCommand}"
+                         GroupName="NavGroup">
+              <ToolTip.Tip>
+                <StackPanel>
+                  <TextBlock Text="Справочники" FontWeight="Bold"/>
+                  <TextBlock Text="Горячая клавиша: Ctrl+2"/>
+                </StackPanel>
+              </ToolTip.Tip>
+              <Grid>
+                <Image Source="avares://MedProject/Design/Image/folder.png"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Height="30" Width="30" Margin="22,0,0,0" Stretch="Uniform"/>
+                <TextBlock Text="Справочники"
+                           VerticalAlignment="Center" HorizontalAlignment="Left"
+                           Foreground="#DBDBDB" FontSize="18" Margin="70,0,0,0"/>
+              </Grid>
+            </RadioButton>
+
+            <!-- Справка -->
+            <RadioButton x:Name="NavHelpRadio"
+                         Theme="{StaticResource BtnStyle}"
+                         Command="{Binding HelpCommand}"
+                         GroupName="NavGroup">
+              <ToolTip.Tip>
+                <StackPanel>
+                  <TextBlock Text="Справка" FontWeight="Bold"/>
+                  <TextBlock Text="Горячая клавиша: Ctrl+3"/>
+                </StackPanel>
+              </ToolTip.Tip>
+              <Grid>
+                <Image Source="avares://MedProject/Design/Image/vopros.png"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Height="30" Width="30" Margin="22,0,0,0" Stretch="Uniform"/>
+                <TextBlock Text="Справка"
+                           VerticalAlignment="Center" HorizontalAlignment="Left"
+                           Foreground="#DBDBDB" FontSize="18" Margin="70,0,0,0"/>
+              </Grid>
+            </RadioButton>
+
+          </StackPanel>
+        </Border>
+
+        <!-- Content Area -->
+        <ContentControl Grid.Column="1"
+                        Content="{Binding CurrentView}" />
+      </Grid>
+    </Border>
+  </Grid>
+
+</Window>

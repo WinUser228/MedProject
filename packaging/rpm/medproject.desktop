@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=MedProject
+Comment=Hospital statistics desktop application
+Exec=env DOTNET_EnableDiagnostics=0 /usr/bin/medproject
+Path=/opt/medproject
+Icon=medproject
+Terminal=false
+Categories=Office;Utility;
+StartupNotify=true
+

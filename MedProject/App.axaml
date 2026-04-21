@@ -1,0 +1,141 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="MedProject.App"
+             xmlns:vm="clr-namespace:MedProject.ViewModels.TabViewModels"
+             xmlns:vm1="clr-namespace:MedProject.ViewModels"
+             xmlns:vmAdd="clr-namespace:MedProject.ViewModels.AddViewModels"
+             xmlns:vmEdit="clr-namespace:MedProject.ViewModels.EditModelView"
+             xmlns:view="clr-namespace:MedProject.Views.TabViews"
+             xmlns:view1="clr-namespace:MedProject.Views"
+             xmlns:viewForm="clr-namespace:MedProject.Views.ViewEnterForm"
+             RequestedThemeVariant="Light">
+
+  <Application.DataTemplates>
+    <DataTemplate DataType="{x:Type vm:HelpViewModel}">
+      <view:HelpView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:FormViewModel}">
+      <view:FormView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:GuideViewModel}">
+      <view:GuideView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vmAdd:AddBedViewModel}">
+      <viewForm:BedEnterFormView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vmAdd:AddDepartmentViewModel}">
+      <viewForm:DepartmentEnterFormView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vmAdd:AddBedTypeViewModel}">
+      <viewForm:BedTypeEnterFormView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vmEdit:EditBedViewModel}">
+      <viewForm:BedEnterFormView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vmEdit:EditDepartmentViewModel}">
+      <viewForm:DepartmentEnterFormView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vmEdit:EditBedTypeViewModel}">
+      <viewForm:BedTypeEnterFormView />
+    </DataTemplate>
+
+  </Application.DataTemplates>
+
+  <Application.Styles>
+    <FluentTheme />
+
+    <!-- Buttons: consistent sizing + visuals across the app -->
+    <Style Selector="Button">
+      <Setter Property="Height" Value="30" />
+      <Setter Property="Padding" Value="10,5" />
+      <Setter Property="CornerRadius" Value="4" />
+      <Setter Property="Background" Value="#FFFFFF" />
+      <Setter Property="BorderBrush" Value="#1565C0" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Foreground" Value="#0D47A1" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button:pointerover">
+      <Setter Property="Background" Value="#E3F2FD" />
+      <Setter Property="BorderBrush" Value="#0D47A1" />
+    </Style>
+    <Style Selector="Button:pressed">
+      <Setter Property="Background" Value="#BBDEFB" />
+    </Style>
+    <Style Selector="Button:disabled">
+      <Setter Property="Background" Value="#ECEFF1" />
+      <Setter Property="BorderBrush" Value="#B0BEC5" />
+      <Setter Property="Foreground" Value="#78909C" />
+    </Style>
+
+    <!-- Primary action button -->
+    <Style Selector="Button.primary">
+      <Setter Property="Background" Value="#1565C0" />
+      <Setter Property="BorderBrush" Value="#0D47A1" />
+      <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+    <Style Selector="Button.primary:pointerover">
+      <Setter Property="Background" Value="#1976D2" />
+      <Setter Property="BorderBrush" Value="#1565C0" />
+    </Style>
+    <Style Selector="Button.primary:pressed">
+      <Setter Property="Background" Value="#0D47A1" />
+    </Style>
+    <Style Selector="Button.primary:disabled">
+      <Setter Property="Background" Value="#CFD8DC" />
+      <Setter Property="BorderBrush" Value="#B0BEC5" />
+      <Setter Property="Foreground" Value="#546E7A" />
+    </Style>
+
+    <!-- Ensure light theme uses dark text by default -->
+    <Style Selector="TextBlock">
+      <Setter Property="Foreground" Value="Black" />
+    </Style>
+    <Style Selector="TextBox">
+      <Setter Property="Foreground" Value="Black" />
+    </Style>
+    <Style Selector="ComboBox">
+      <Setter Property="Foreground" Value="Black" />
+    </Style>
+    <Style Selector="DatePicker">
+      <Setter Property="Foreground" Value="Black" />
+    </Style>
+    <Style Selector="CalendarDatePicker">
+      <Setter Property="Foreground" Value="Black" />
+    </Style>
+
+    <!-- Tooltips: readable width, full text (no ellipsis), avoid host clipping -->
+    <Style Selector="ToolTip">
+      <Setter Property="MaxWidth" Value="800"/>
+      <Setter Property="ClipToBounds" Value="False"/>
+    </Style>
+    <Style Selector="ToolTip TextBlock">
+      <Setter Property="TextWrapping" Value="Wrap"/>
+      <Setter Property="TextTrimming" Value="None"/>
+    </Style>
+
+    <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+    <StyleInclude Source="avares://MedProject/Design/Styles/Validation.axaml"/>
+    <StyleInclude Source="avares://MedProject/Design/Styles/WindowsAddUpdate.axaml"/>
+  </Application.Styles>
+
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://MedProject/Design/Styles/Button.axaml"/>
+        <ResourceInclude Source="avares://MedProject/Design/Styles/CardStyle.axaml"/>
+        <ResourceInclude Source="avares://MedProject/Design/Styles/Text.axaml"/>
+        <ResourceInclude Source="avares://MedProject/Design/Styles/Image.axaml"/>
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Application.Resources>
+
+</Application>

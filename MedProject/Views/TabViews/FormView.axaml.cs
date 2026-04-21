@@ -13,9 +13,47 @@ public partial class FormView : UserControl
 {
     private bool _suppressNumericFilter;
 
+    private bool _syncHeaderWidthsPending;
+
     public FormView()
     {
         InitializeComponent();
+        ReportDataGrid.LayoutUpdated += (_, _) => ScheduleSyncHeaderColumnWidths();
+        Loaded += (_, _) => ScheduleSyncHeaderColumnWidths();
+    }
+
+    /// <summary>
+    /// Вертикальные линии шапки и DataGrid совпадают, если ширины колонок взять из отрисованного грида
+    /// (иначе расходятся доли *, полоса прокрутки и округление).
+    /// </summary>
+    private void ScheduleSyncHeaderColumnWidths()
+    {
+        if (_syncHeaderWidthsPending)
+            return;
+        _syncHeaderWidthsPending = true;
+        Dispatcher.UIThread.Post(() =>
+        {
+            _syncHeaderWidthsPending = false;
+            SyncHeaderColumnWidthsFromDataGrid();
+        }, DispatcherPriority.Render);
+    }
+
+    private void SyncHeaderColumnWidthsFromDataGrid()
+    {
+        if (HeaderGrid.ColumnDefinitions.Count != ReportDataGrid.Columns.Count)
+            return;
+
+        for (var i = 0; i < ReportDataGrid.Columns.Count; i++)
+        {
+            var w = ReportDataGrid.Columns[i].ActualWidth;
+            if (w <= 0.5 || double.IsNaN(w) || double.IsInfinity(w))
+                continue;
+
+            var def = HeaderGrid.ColumnDefinitions[i];
+            if (def.Width.IsAbsolute && Math.Abs(def.Width.Value - w) < 0.25)
+                continue;
+            def.Width = new GridLength(w, GridUnitType.Pixel);
+        }
     }
 
     private static bool IsEditableAndVisible(DataGridColumn? col)

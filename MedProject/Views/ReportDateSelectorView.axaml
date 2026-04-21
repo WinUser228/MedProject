@@ -1,0 +1,98 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:MedProject.ViewModels"
+        xmlns:converters="clr-namespace:MedProject.Converters"
+        x:Class="MedProject.Views.ReportDateSelectorView"
+        x:DataType="vm:ReportDateSelectorViewModel"
+        Icon="avares://MedProject/Assets/iconApp.ico"
+        Title="Выберите диапазон дат для отчёта"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        ShowInTaskbar="False"
+        Width="360"
+        SizeToContent="Height">
+
+  <Window.Resources>
+    <converters:BooleanToVisibilityConverter x:Key="InverseBooleanConverter" IsInverted="True"/>
+    <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+  </Window.Resources>
+
+  <Grid Background="#F8F8F8" Margin="20">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+
+    <TextBlock Grid.Row="0" Grid.Column="0"
+               Text="Начальная дата:"
+               VerticalAlignment="Center"
+               Margin="0,0,12,10"
+               FontWeight="SemiBold"/>
+    <CalendarDatePicker Grid.Row="0" Grid.Column="1"
+                        SelectedDate="{Binding ReportStartDate, Mode=TwoWay}"
+                        SelectedDateFormat="Custom"
+                        CustomDateFormatString="dd.MM.yyyy"
+                        HorizontalAlignment="Stretch"
+                        Margin="0,0,0,10"/>
+
+    <TextBlock Grid.Row="1" Grid.Column="0"
+               Text="Конечная дата:"
+               VerticalAlignment="Center"
+               Margin="0,0,12,10"
+               FontWeight="SemiBold"/>
+    <CalendarDatePicker Grid.Row="1" Grid.Column="1"
+                        SelectedDate="{Binding ReportEndDate, Mode=TwoWay}"
+                        SelectedDateFormat="Custom"
+                        CustomDateFormatString="dd.MM.yyyy"
+                        HorizontalAlignment="Stretch"
+                        Margin="0,0,0,10"/>
+
+    <!-- Error message -->
+    <Border Grid.Row="2"
+            Grid.ColumnSpan="2"
+            Margin="0,5,0,5"
+            Padding="5"
+            Background="White"
+            BorderBrush="#E53935"
+            BorderThickness="1"
+            CornerRadius="3"
+            IsVisible="{Binding ReportErrorMessage, Converter={StaticResource StringToVisibilityConverter}}">
+      <TextBlock Text="{Binding ReportErrorMessage}"
+                 Foreground="#E53935"
+                 TextWrapping="Wrap"
+                 FontSize="12"/>
+    </Border>
+
+    <!-- Progress bar -->
+    <ProgressBar Grid.Row="3"
+                 Grid.ColumnSpan="2"
+                 IsIndeterminate="True"
+                 Height="15"
+                 HorizontalAlignment="Stretch"
+                 Margin="0,10,0,10"
+                 IsVisible="{Binding IsBusy}"/>
+
+    <!-- Buttons -->
+    <StackPanel Grid.Row="4"
+                Grid.ColumnSpan="2"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Margin="0,20,0,0">
+      <Button Content="Сформировать отчёт"
+              Width="165" Height="30"
+              Margin="0,0,10,0"
+              IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+              Command="{Binding GenerateReportCommand}"/>
+      <Button Content="Отмена"
+              Width="80" Height="30"
+              Command="{Binding CloseDialogCommand}"/>
+    </StackPanel>
+  </Grid>
+</Window>

@@ -1,0 +1,50 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Show validation errors as inline text below the input, not as a floating overlay -->
+  <Style Selector="DataValidationErrors">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <StackPanel>
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"/>
+          <ItemsControl Name="PART_Items"
+                        ItemsSource="{TemplateBinding Errors}"
+                        IsVisible="{TemplateBinding HasErrors}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding}"
+                           Foreground="#D32F2F"
+                           FontSize="11"
+                           TextWrapping="Wrap"
+                           Margin="2,2,2,0"/>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <Style Selector="TextBox:error">
+    <Setter Property="BorderBrush" Value="Red" />
+    <Setter Property="BorderThickness" Value="2" />
+  </Style>
+
+  <Style Selector="ComboBox:error">
+    <Setter Property="BorderBrush" Value="Red" />
+    <Setter Property="BorderThickness" Value="2" />
+  </Style>
+
+  <Style Selector="DatePicker:error">
+    <Setter Property="BorderBrush" Value="Red" />
+    <Setter Property="BorderThickness" Value="2" />
+  </Style>
+
+  <Style Selector="CalendarDatePicker:error">
+    <Setter Property="BorderBrush" Value="Red" />
+    <Setter Property="BorderThickness" Value="2" />
+  </Style>
+
+</Styles>

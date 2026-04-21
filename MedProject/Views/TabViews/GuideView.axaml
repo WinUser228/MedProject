@@ -1,0 +1,298 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:MedProject.ViewModels.TabViewModels"
+             xmlns:converters="clr-namespace:MedProject.Converters"
+             xmlns:entities="clr-namespace:HospitalStatistics.Core.Entities;assembly=HospitalStatistics.Core"
+             x:Class="MedProject.Views.TabViews.GuideView"
+             x:DataType="vm:GuideViewModel"
+             x:CompileBindings="False">
+
+  <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+N" Command="{Binding AddRecordCommand}" />
+    <KeyBinding Gesture="F2" Command="{Binding EditSelectedCommand}" />
+    <KeyBinding Gesture="Delete" Command="{Binding DeleteSelectedCommand}" />
+  </UserControl.KeyBindings>
+
+  <UserControl.Resources>
+    <converters:BooleanToVisibilityConverter x:Key="BoolToVis" />
+    <converters:BooleanToVisibilityConverter x:Key="InvBoolToVis" IsInverted="True" />
+    <converters:NullableDateOnlyToStringConverter x:Key="NullableDateOnlyToString" />
+    <!-- Та же сетка 16×16, Fill и отступы, что у иконки удаления -->
+    <StreamGeometry x:Key="GuideEditIconGeometry">M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z</StreamGeometry>
+  </UserControl.Resources>
+
+  <UserControl.Styles>
+    <Style Selector="DataGridRow">
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+  </UserControl.Styles>
+
+  <Grid>
+    <TabControl Margin="10" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}">
+
+      <!-- Отделения -->
+      <TabItem Header="Отделения">
+        <Grid Background="#FFE5E5E5">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+
+          <StackPanel Orientation="Horizontal" Margin="5" Grid.Row="0" VerticalAlignment="Center">
+            <TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <TextBox Width="200"
+                     Text="{Binding DepartmentsViewModel.SearchText}"
+                     Watermark="Введите текст для поиска" />
+          </StackPanel>
+
+          <DataGrid Grid.Row="1" Margin="5"
+                    ItemsSource="{Binding DepartmentsViewModel.FilteredDepartments}"
+                    SelectedItem="{Binding SelectedDepartment, Mode=TwoWay}"
+                    AutoGenerateColumns="False"
+                    IsReadOnly="True"
+                    CanUserReorderColumns="False"
+                    CanUserResizeColumns="True"
+                    CanUserSortColumns="True"
+                    SelectionMode="Single"
+                    IsVisible="{Binding DepartmentsViewModel.HasSearchResults, Converter={StaticResource BoolToVis}}">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="Название отделения"
+                                  Binding="{Binding DepartmentName}"
+                                  Width="*"
+                                  IsReadOnly="True"/>
+              <DataGridTemplateColumn Header="Действия" Width="110">
+                <DataGridTemplateColumn.CellTemplate>
+                  <DataTemplate>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                      <Button Command="{Binding $parent[DataGrid].((vm:GuideViewModel)DataContext).EditCommandDepartment}"
+                              CommandParameter="{Binding}"
+                              Margin="2" Padding="6,4">
+                        <ToolTip.Tip>Редактировать (F2)</ToolTip.Tip>
+                        <Path Width="16" Height="16" Stretch="Uniform" Fill="#333333"
+                              Data="{StaticResource GuideEditIconGeometry}" />
+                      </Button>
+                      <Button Command="{Binding $parent[DataGrid].((vm:GuideViewModel)DataContext).DeleteCommandDepartment}"
+                              CommandParameter="{Binding}"
+                              Margin="2" Padding="6,4">
+                        <Path Width="16" Height="16" Stretch="Uniform" Fill="#333333"
+                              Data="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                        <ToolTip.Tip>Удалить (Delete)</ToolTip.Tip>
+                      </Button>
+                    </StackPanel>
+                  </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+              </DataGridTemplateColumn>
+            </DataGrid.Columns>
+          </DataGrid>
+
+          <TextBlock Grid.Row="1" Margin="5"
+                     Text="Нет результатов, соответствующих вашему запросу."
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     Foreground="Gray"
+                     FontSize="16"
+                     FontWeight="Bold"
+                     IsVisible="{Binding DepartmentsViewModel.HasSearchResults, Converter={StaticResource InvBoolToVis}}" />
+
+          <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+            <Button Command="{Binding AddRecordCommand}"
+                    Margin="0,0,10,0" Padding="10,5">
+              <ToolTip.Tip>Добавить запись (Ctrl+N)</ToolTip.Tip>
+              <Button.Content>Добавить запись</Button.Content>
+            </Button>
+          </StackPanel>
+        </Grid>
+      </TabItem>
+
+      <!-- Койки -->
+      <TabItem Header="Койки">
+        <Grid Background="#FFE5E5E5">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+
+          <StackPanel Orientation="Horizontal" Margin="5" Grid.Row="0" VerticalAlignment="Center">
+            <TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <TextBox Width="200"
+                     Text="{Binding BedsViewModel.SearchText}"
+                     Watermark="Введите текст для поиска" />
+            <TextBlock Text="Фильтровать по:" VerticalAlignment="Center" Margin="15,0,5,0"/>
+            <ComboBox Width="150"
+                      ItemsSource="{Binding BedsViewModel.AvailableFilterColumns}"
+                      SelectedItem="{Binding BedsViewModel.SelectedFilterColumn}"
+                      DisplayMemberBinding="{Binding DisplayName}" />
+
+            <CheckBox Margin="15,0,0,0"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding BedsViewModel.ShowOnlyCurrentYear, Mode=TwoWay}"
+                      Content="Текущий год" />
+            <CheckBox Margin="10,0,0,0"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding BedsViewModel.ShowOnlyActiveToday, Mode=TwoWay}"
+                      Content="Действующий план" />
+          </StackPanel>
+
+          <DataGrid Grid.Row="1" Margin="5"
+                    ItemsSource="{Binding BedsViewModel.FilteredBeds}"
+                    SelectedItem="{Binding SelectedBed, Mode=TwoWay}"
+                    AutoGenerateColumns="False"
+                    IsReadOnly="True"
+                    CanUserReorderColumns="False"
+                    CanUserResizeColumns="True"
+                    CanUserSortColumns="True"
+                    SelectionMode="Single"
+                    IsVisible="{Binding BedsViewModel.HasSearchResults, Converter={StaticResource BoolToVis}}">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="Тип койки"
+                                  Binding="{Binding BedType.BedTypeName}"
+                                  Width="*"
+                                  IsReadOnly="True"/>
+              <DataGridTextColumn Header="Количество"
+                                  Binding="{Binding Amount}"
+                                  Width="100"
+                                  IsReadOnly="True"/>
+              <DataGridTextColumn Header="Отделение"
+                                  Binding="{Binding Department.DepartmentName}"
+                                  Width="*"
+                                  IsReadOnly="True"/>
+              <DataGridTextColumn Header="Дата начала"
+                                  Binding="{Binding EffectiveDate, StringFormat=dd.MM.yyyy}"
+                                  Width="120"
+                                  IsReadOnly="True"/>
+              <DataGridTemplateColumn Header="Не используется с" Width="140" IsReadOnly="True">
+                <DataGridTemplateColumn.CellTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding NotUsedSince, Converter={StaticResource NullableDateOnlyToString}}"
+                               VerticalAlignment="Center" Margin="12,0,0,0"/>
+                  </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+              </DataGridTemplateColumn>
+              <DataGridTextColumn Header="Месячный план"
+                                  Binding="{Binding MonthlyPlan}"
+                                  Width="120"
+                                  IsReadOnly="True"/>
+              <DataGridTemplateColumn Header="Действия" Width="110">
+                <DataGridTemplateColumn.CellTemplate>
+                  <DataTemplate>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                      <Button Command="{Binding $parent[DataGrid].((vm:GuideViewModel)DataContext).EditCommandBed}"
+                              CommandParameter="{Binding}"
+                              Margin="2" Padding="6,4">
+                        <ToolTip.Tip>Редактировать (F2)</ToolTip.Tip>
+                        <Path Width="16" Height="16" Stretch="Uniform" Fill="#333333"
+                              Data="{StaticResource GuideEditIconGeometry}" />
+                      </Button>
+                      <Button Command="{Binding $parent[DataGrid].((vm:GuideViewModel)DataContext).DeleteCommandBed}"
+                              CommandParameter="{Binding}"
+                              Margin="2" Padding="6,4">
+                        <Path Width="16" Height="16" Stretch="Uniform" Fill="#333333"
+                              Data="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                        <ToolTip.Tip>Удалить (Delete)</ToolTip.Tip>
+                      </Button>
+                    </StackPanel>
+                  </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+              </DataGridTemplateColumn>
+            </DataGrid.Columns>
+          </DataGrid>
+
+          <TextBlock Grid.Row="1" Margin="5"
+                     Text="Нет результатов, соответствующих вашему запросу."
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     Foreground="Gray"
+                     FontSize="16"
+                     FontWeight="Bold"
+                     IsVisible="{Binding BedsViewModel.HasSearchResults, Converter={StaticResource InvBoolToVis}}" />
+
+          <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+            <Button Command="{Binding AddRecordCommand}"
+                    Margin="0,0,10,0" Padding="10,5">
+              <ToolTip.Tip>Добавить запись (Ctrl+N)</ToolTip.Tip>
+              <Button.Content>Добавить запись</Button.Content>
+            </Button>
+          </StackPanel>
+        </Grid>
+      </TabItem>
+
+      <!-- Типы коек -->
+      <TabItem Header="Типы коек">
+        <Grid Background="#FFE5E5E5">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+
+          <StackPanel Orientation="Horizontal" Margin="5" Grid.Row="0" VerticalAlignment="Center">
+            <TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <TextBox Width="200"
+                     Text="{Binding BedTypesViewModel.SearchText}"
+                     Watermark="Введите текст для поиска" />
+          </StackPanel>
+
+          <DataGrid Grid.Row="1" Margin="5"
+                    ItemsSource="{Binding BedTypesViewModel.FilteredBedTypes}"
+                    SelectedItem="{Binding SelectedBedType, Mode=TwoWay}"
+                    AutoGenerateColumns="False"
+                    IsReadOnly="True"
+                    CanUserReorderColumns="False"
+                    CanUserResizeColumns="True"
+                    CanUserSortColumns="True"
+                    SelectionMode="Single"
+                    IsVisible="{Binding BedTypesViewModel.HasSearchResults, Converter={StaticResource BoolToVis}}">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="Название типа койки"
+                                  Binding="{Binding BedTypeName}"
+                                  Width="*"
+                                  IsReadOnly="True"/>
+              <DataGridTemplateColumn Header="Действия" Width="110">
+                <DataGridTemplateColumn.CellTemplate>
+                  <DataTemplate>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                      <Button Command="{Binding $parent[DataGrid].((vm:GuideViewModel)DataContext).EditCommandBedType}"
+                              CommandParameter="{Binding}"
+                              Margin="2" Padding="6,4">
+                        <ToolTip.Tip>Редактировать (F2)</ToolTip.Tip>
+                        <Path Width="16" Height="16" Stretch="Uniform" Fill="#333333"
+                              Data="{StaticResource GuideEditIconGeometry}" />
+                      </Button>
+                      <Button Command="{Binding $parent[DataGrid].((vm:GuideViewModel)DataContext).DeleteCommandBedType}"
+                              CommandParameter="{Binding}"
+                              Margin="2" Padding="6,4">
+                        <Path Width="16" Height="16" Stretch="Uniform" Fill="#333333"
+                              Data="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                        <ToolTip.Tip>Удалить (Delete)</ToolTip.Tip>
+                      </Button>
+                    </StackPanel>
+                  </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+              </DataGridTemplateColumn>
+            </DataGrid.Columns>
+          </DataGrid>
+
+          <TextBlock Grid.Row="1" Margin="5"
+                     Text="Нет результатов, соответствующих вашему запросу."
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     Foreground="Gray"
+                     FontSize="16"
+                     FontWeight="Bold"
+                     IsVisible="{Binding BedTypesViewModel.HasSearchResults, Converter={StaticResource InvBoolToVis}}" />
+
+          <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+            <Button Command="{Binding AddRecordCommand}"
+                    Margin="0,0,10,0" Padding="10,5">
+              <ToolTip.Tip>Добавить запись (Ctrl+N)</ToolTip.Tip>
+              <Button.Content>Добавить запись</Button.Content>
+            </Button>
+          </StackPanel>
+        </Grid>
+      </TabItem>
+
+    </TabControl>
+  </Grid>
+</UserControl>

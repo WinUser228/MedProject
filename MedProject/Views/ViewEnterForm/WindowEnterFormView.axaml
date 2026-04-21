@@ -1,0 +1,14 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MedProject.Views.ViewEnterForm.WindowEnterFormView"
+        x:CompileBindings="False"
+        Icon="avares://MedProject/Assets/iconApp.ico"
+        Title="Форма ввода"
+        SizeToContent="WidthAndHeight"
+        MinWidth="400"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+  <ContentControl Content="{Binding}" Margin="5"/>
+
+</Window>

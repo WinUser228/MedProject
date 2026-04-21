@@ -1,0 +1,259 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:addVm="clr-namespace:MedProject.ViewModels.AddViewModels"
+             xmlns:editVm="clr-namespace:MedProject.ViewModels.EditModelView"
+             x:Class="MedProject.Views.ViewEnterForm.BedEnterFormView"
+             x:CompileBindings="False">
+
+  <UserControl.DataTemplates>
+    <DataTemplate DataType="{x:Type addVm:AddBedViewModel}">
+      <Border Margin="10" Padding="10" BorderBrush="#AAAAAA" BorderThickness="1" CornerRadius="4">
+        <StackPanel>
+          <TextBlock Text="Добавить койку" FontWeight="Bold" FontSize="14" Margin="0,0,0,10"/>
+
+          <!-- Отделение -->
+          <StackPanel Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="Отделение" Width="160" VerticalAlignment="Center"/>
+              <ComboBox x:Name="AddDeptBox"
+                        ItemsSource="{Binding AvailableDepartments}"
+                        SelectedItem="{Binding SelectedDepartment}"
+                        DisplayMemberBinding="{Binding DepartmentName}"
+                        Width="220"/>
+            </StackPanel>
+            <ItemsControl ItemsSource="{Binding (DataValidationErrors.Errors), ElementName=AddDeptBox}" Margin="160,0,0,0">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding}" Foreground="#D32F2F" FontSize="11" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <!-- Тип койки -->
+          <StackPanel Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="Тип койки" Width="160" VerticalAlignment="Center"/>
+              <ComboBox x:Name="AddBedTypeBox"
+                        ItemsSource="{Binding AvailableBedTypes}"
+                        SelectedItem="{Binding SelectedBedType}"
+                        DisplayMemberBinding="{Binding BedTypeName}"
+                        Width="220"/>
+            </StackPanel>
+            <ItemsControl ItemsSource="{Binding (DataValidationErrors.Errors), ElementName=AddBedTypeBox}" Margin="160,0,0,0">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding}" Foreground="#D32F2F" FontSize="11" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <!-- Количество -->
+          <StackPanel Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="Количество" Width="160" VerticalAlignment="Center"/>
+              <TextBox x:Name="AddAmountBox"
+                       Text="{Binding AmountInput}"
+                       Width="220"/>
+            </StackPanel>
+            <ItemsControl ItemsSource="{Binding (DataValidationErrors.Errors), ElementName=AddAmountBox}" Margin="160,0,0,0">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding}" Foreground="#D32F2F" FontSize="11" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <!-- Дата начала действия -->
+          <StackPanel Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="Дата начала действия" Width="160" VerticalAlignment="Center"/>
+              <CalendarDatePicker x:Name="AddEffectiveDateBox"
+                                  SelectedDate="{Binding EffectiveDate, Mode=TwoWay}"
+                                  SelectedDateFormat="Custom"
+                                  CustomDateFormatString="dd.MM.yyyy"
+                                  Width="220"/>
+            </StackPanel>
+            <ItemsControl ItemsSource="{Binding (DataValidationErrors.Errors), ElementName=AddEffectiveDateBox}" Margin="160,0,0,0">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding}" Foreground="#D32F2F" FontSize="11" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <!-- Не используется с -->
+          <StackPanel Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="Не используется с" Width="160" VerticalAlignment="Center"/>
+              <CalendarDatePicker x:Name="AddNotUsedSinceBox"
+                                  SelectedDate="{Binding NotUsedSince, Mode=TwoWay}"
+                                  SelectedDateFormat="Custom"
+                                  CustomDateFormatString="dd.MM.yyyy"
+                                  Width="220"/>
+            </StackPanel>
+            <ItemsControl ItemsSource="{Binding (DataValidationErrors.Errors), ElementName=AddNotUsedSinceBox}" Margin="160,0,0,0">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding}" Foreground="#D32F2F" FontSize="11" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <!-- Месячный план -->
+          <StackPanel Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="Месячный план" Width="160" VerticalAlignment="Center"/>
+              <TextBox x:Name="AddMonthlyPlanBox"
+                       Text="{Binding MonthlyPlanInput}"
+                       Width="220"/>
+            </StackPanel>
+            <ItemsControl ItemsSource="{Binding (DataValidationErrors.Errors), ElementName=AddMonthlyPlanBox}" Margin="160,0,0,0">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding}" Foreground="#D32F2F" FontSize="11" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <Button Content="Добавить"
+                  Width="87"
+                  HorizontalAlignment="Right"
+                  Margin="0,10,0,0"
+                  Command="{Binding AddBedCommand}"/>
+        </StackPanel>
+      </Border>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type editVm:EditBedViewModel}">
+      <Border Margin="10" Padding="10" BorderBrush="#AAAAAA" BorderThickness="1" CornerRadius="4">
+        <StackPanel>
+          <TextBlock Text="Редактировать койку" FontWeight="Bold" FontSize="14" Margin="0,0,0,10"/>
+
+          <!-- Отделение -->
+          <StackPanel Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="Отделение" Width="160" VerticalAlignment="Center"/>
+              <ComboBox x:Name="EditDeptBox"
+                        ItemsSource="{Binding AvailableDepartments}"
+                        SelectedItem="{Binding SelectedDepartment}"
+                        DisplayMemberBinding="{Binding DepartmentName}"
+                        Width="220"/>
+            </StackPanel>
+            <ItemsControl ItemsSource="{Binding (DataValidationErrors.Errors), ElementName=EditDeptBox}" Margin="160,0,0,0">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding}" Foreground="#D32F2F" FontSize="11" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <!-- Тип койки -->
+          <StackPanel Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="Тип койки" Width="160" VerticalAlignment="Center"/>
+              <ComboBox x:Name="EditBedTypeBox"
+                        ItemsSource="{Binding AvailableBedTypes}"
+                        SelectedItem="{Binding SelectedBedType}"
+                        DisplayMemberBinding="{Binding BedTypeName}"
+                        Width="220"/>
+            </StackPanel>
+            <ItemsControl ItemsSource="{Binding (DataValidationErrors.Errors), ElementName=EditBedTypeBox}" Margin="160,0,0,0">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding}" Foreground="#D32F2F" FontSize="11" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <!-- Количество -->
+          <StackPanel Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="Количество" Width="160" VerticalAlignment="Center"/>
+              <TextBox x:Name="EditAmountBox"
+                       Text="{Binding AmountInput}"
+                       Width="220"/>
+            </StackPanel>
+            <ItemsControl ItemsSource="{Binding (DataValidationErrors.Errors), ElementName=EditAmountBox}" Margin="160,0,0,0">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding}" Foreground="#D32F2F" FontSize="11" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <!-- Дата начала действия -->
+          <StackPanel Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="Дата начала действия" Width="160" VerticalAlignment="Center"/>
+              <CalendarDatePicker x:Name="EditEffectiveDateBox"
+                                  SelectedDate="{Binding EffectiveDate, Mode=TwoWay}"
+                                  SelectedDateFormat="Custom"
+                                  CustomDateFormatString="dd.MM.yyyy"
+                                  Width="220"/>
+            </StackPanel>
+            <ItemsControl ItemsSource="{Binding (DataValidationErrors.Errors), ElementName=EditEffectiveDateBox}" Margin="160,0,0,0">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding}" Foreground="#D32F2F" FontSize="11" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <!-- Не используется с -->
+          <StackPanel Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="Не используется с" Width="160" VerticalAlignment="Center"/>
+              <CalendarDatePicker x:Name="EditNotUsedSinceBox"
+                                  SelectedDate="{Binding NotUsedSince, Mode=TwoWay}"
+                                  SelectedDateFormat="Custom"
+                                  CustomDateFormatString="dd.MM.yyyy"
+                                  Width="220"/>
+            </StackPanel>
+            <ItemsControl ItemsSource="{Binding (DataValidationErrors.Errors), ElementName=EditNotUsedSinceBox}" Margin="160,0,0,0">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding}" Foreground="#D32F2F" FontSize="11" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <!-- Месячный план -->
+          <StackPanel Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="Месячный план" Width="160" VerticalAlignment="Center"/>
+              <TextBox x:Name="EditMonthlyPlanBox"
+                       Text="{Binding MonthlyPlanInput}"
+                       Width="220"/>
+            </StackPanel>
+            <ItemsControl ItemsSource="{Binding (DataValidationErrors.Errors), ElementName=EditMonthlyPlanBox}" Margin="160,0,0,0">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding}" Foreground="#D32F2F" FontSize="11" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <Button Content="Обновить"
+                  Width="87"
+                  HorizontalAlignment="Right"
+                  Margin="0,10,0,0"
+                  Command="{Binding SaveCommand}"/>
+        </StackPanel>
+      </Border>
+    </DataTemplate>
+  </UserControl.DataTemplates>
+
+  <ContentControl Content="{Binding}"/>
+</UserControl>

@@ -124,6 +124,23 @@
     <Style Selector="#HeaderGrid Border.header-valign-center TextBox.header-label">
       <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
+    <!-- Первые колонки: без Fluent TextBox — только TextBlock в ScrollViewer (иначе текст обрезается) -->
+    <Style Selector="#HeaderGrid TextBlock.header-text">
+      <Setter Property="Foreground" Value="Black"/>
+      <Setter Property="FontSize" Value="11"/>
+      <Setter Property="MinWidth" Value="0"/>
+      <Setter Property="LineHeight" Value="15"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+      <Setter Property="TextAlignment" Value="Center"/>
+      <Setter Property="TextTrimming" Value="None"/>
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="VerticalAlignment" Value="Top"/>
+      <Setter Property="Margin" Value="2"/>
+    </Style>
+    <Style Selector="#HeaderGrid Border.header-first-cols > ScrollViewer">
+      <Setter Property="MinWidth" Value="0"/>
+      <Setter Property="ClipToBounds" Value="False"/>
+    </Style>
 
   </UserControl.Styles>
 
@@ -172,19 +189,19 @@
     </Grid>
 
     <!-- Custom column headers matching DataGrid columns -->
-    <Grid Grid.Row="2" x:Name="HeaderGrid" Classes="header-grid" Background="White" ClipToBounds="False">
+    <Grid Grid.Row="2" x:Name="HeaderGrid" Classes="header-grid" Background="White" ClipToBounds="False" UseLayoutRounding="False">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="200" MinWidth="176"/>
-        <ColumnDefinition Width="40*" MinWidth="76"/>
-        <ColumnDefinition Width="100*" MinWidth="128"/>
-        <ColumnDefinition Width="100*"/>
-        <ColumnDefinition Width="45*" MinWidth="50"/>
+        <ColumnDefinition Width="20*" MinWidth="10"/>
+        <ColumnDefinition Width="62*" MinWidth="112"/>
+        <ColumnDefinition Width="92*"/>
+        <ColumnDefinition Width="50*" MinWidth="58"/>
         <ColumnDefinition Width="60*" MinWidth="64"/>
         <ColumnDefinition Width="70*"/>
-        <ColumnDefinition Width="75*"/>
-        <ColumnDefinition Width="75*"/>
-        <ColumnDefinition Width="50*" MinWidth="58"/>
         <ColumnDefinition Width="100*"/>
+        <ColumnDefinition Width="100*"/>
+        <ColumnDefinition Width="50*" MinWidth="58"/>
+        <ColumnDefinition Width="84*"/>
         <ColumnDefinition Width="50*" MinWidth="58"/>
         <ColumnDefinition Width="60*" MinWidth="64"/>
         <ColumnDefinition Width="90*"/>
@@ -197,39 +214,27 @@
         <RowDefinition Height="Auto" MinHeight="44"/>
       </Grid.RowDefinitions>
 
-      <!-- Не использовать header-valign-center: центрирование по вертикали у многострочного TextBox обрезает текст во Fluent -->
-      <Border Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" BorderBrush="Black" BorderThickness="1">
-        <Grid MinWidth="0" VerticalAlignment="Stretch">
-          <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-          </Grid.RowDefinitions>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MinWidth="0"/>
-          </Grid.ColumnDefinitions>
-          <TextBox Grid.Row="0" Grid.Column="0" Classes="header-label" Text="Название"/>
-        </Grid>
+      <!-- Первые 3 колонки: ScrollViewer задаёт ширину для переноса; TextBlock не клипает в отличие от Fluent TextBox -->
+      <Border Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Classes="header-first-cols" BorderBrush="Black" BorderThickness="1">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                      ClipToBounds="False" MinWidth="0">
+          <TextBlock Classes="header-text" Text="Наименование"/>
+        </ScrollViewer>
       </Border>
-      <Border Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" BorderBrush="Black" BorderThickness="1">
-        <Grid MinWidth="0" VerticalAlignment="Stretch">
-          <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-          </Grid.RowDefinitions>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MinWidth="0"/>
-          </Grid.ColumnDefinitions>
-          <TextBox Grid.Row="0" Grid.Column="0" Classes="header-label" Text="Код"/>
-        </Grid>
+      <Border Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" Classes="header-first-cols" BorderBrush="Black" BorderThickness="1">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                      ClipToBounds="False" MinWidth="0">
+          <TextBlock Classes="header-text" Text="Код"/>
+        </ScrollViewer>
       </Border>
-      <Border Grid.Row="0" Grid.RowSpan="3" Grid.Column="2" BorderBrush="Black" BorderThickness="1">
-        <Grid MinWidth="0" VerticalAlignment="Stretch">
-          <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-          </Grid.RowDefinitions>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MinWidth="0"/>
-          </Grid.ColumnDefinitions>
-          <TextBox Grid.Row="0" Grid.Column="0" Classes="header-label" Text="Фактически развернуто коек"/>
-        </Grid>
+      <Border Grid.Row="0" Grid.RowSpan="3" Grid.Column="2" Classes="header-first-cols" BorderBrush="Black" BorderThickness="1">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                      ClipToBounds="False" MinWidth="0">
+          <TextBlock Classes="header-text" Text="Фактически развернуто коек"/>
+        </ScrollViewer>
       </Border>
       <Border Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="9" BorderBrush="Black" BorderThickness="1">
         <Grid MinWidth="0">
@@ -401,6 +406,9 @@
               RowBackground="White"
               Foreground="Black"
               RowHeight="36"
+              HorizontalGridLinesBrush="Black"
+              VerticalGridLinesBrush="Black"
+              UseLayoutRounding="False"
               KeyDown="ReportDataGrid_OnKeyDown"
               PreparingCellForEdit="ReportDataGrid_OnPreparingCellForEdit"
               PointerPressed="ReportDataGrid_OnPointerPressed"
@@ -414,7 +422,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn Width="40*" MinWidth="76" IsReadOnly="True">
+        <DataGridTemplateColumn Width="20*" MinWidth="56" IsReadOnly="True">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
               <TextBlock Text="{Binding Code}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2"/>
@@ -422,7 +430,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn Width="100*" MinWidth="128" IsReadOnly="True">
+        <DataGridTemplateColumn Width="62*" MinWidth="112" IsReadOnly="True">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
               <TextBlock Text="{Binding KoikiCount}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2"/>
@@ -430,7 +438,7 @@
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn Width="100*">
+        <DataGridTemplateColumn Width="92*">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
               <Grid ToolTip.Tip="{Binding PatientsAtStartOfDayErrorMessage}">
@@ -550,7 +558,7 @@
           </DataGridTemplateColumn.CellEditingTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn Width="70*">
+        <DataGridTemplateColumn Width="100*" MinWidth="104">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
               <Grid ToolTip.Tip="{Binding TransferredFromOtherDepartmentsErrorMessage}">
@@ -580,7 +588,7 @@
           </DataGridTemplateColumn.CellEditingTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn Width="70*">
+        <DataGridTemplateColumn Width="100*" MinWidth="104">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
               <Grid ToolTip.Tip="{Binding TransferredToOtherDepartmentsErrorMessage}">
@@ -640,7 +648,7 @@
           </DataGridTemplateColumn.CellEditingTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTemplateColumn Width="100*">
+        <DataGridTemplateColumn Width="84*">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
               <Grid ToolTip.Tip="{Binding DischargedByTransferErrorMessage}">
@@ -808,29 +816,29 @@
       </Grid.ColumnDefinitions>
 
       <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-        <Button Content="Отчёт - движение больных"
-                Width="210"
+        <Button Width="210"
                 Command="{Binding OpenReportSevenCommand}"
                 Margin="0,0,10,0">
           <ToolTip.Tip>Отчёт — движение больных (Ctrl+R)</ToolTip.Tip>
+          <Button.Content>Отчёт - движение больных</Button.Content>
         </Button>
-        <Button Content="Отчёт - работа коек"
-                Width="160"
+        <Button Width="160"
                 Command="{Binding OpenReportSevenPart2Command}"
                 Margin="0,0,10,0">
           <ToolTip.Tip>Отчёт — работа коек (Ctrl+Shift+R)</ToolTip.Tip>
+          <Button.Content>Отчёт - работа коек</Button.Content>
         </Button>
       </StackPanel>
 
       <Button Grid.Column="1"
               Classes="primary"
-              Content="Сохранить данные"
               Width="150"
               Command="{Binding SaveReportEntriesCommand}"
               HorizontalAlignment="Right"
               VerticalAlignment="Center"
               IsEnabled="{Binding CanSave}">
         <ToolTip.Tip>Сохранить данные (Ctrl+S)</ToolTip.Tip>
+        <Button.Content>Сохранить данные</Button.Content>
       </Button>
     </Grid>
   </Grid>

@@ -75,6 +75,13 @@ _ReSharper.*
 # WPF publish output
 publish/
 
+# Linux publish / verification outputs (repo-local)
+publish_linux/
+_build_verify/
+
+# Local app data
+*.db
+
 # Web API temp files
 appsettings.Development.json
 appsettings.Local.json

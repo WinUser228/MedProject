@@ -13,7 +13,7 @@ public static class ValidationHelper
         if (string.IsNullOrWhiteSpace(input))
         {
             if (isOptional) return string.Empty;
-            return $"{propertyName} не может быть пустым.";
+            return $"{propertyName} не может быть пустым";
         }
 
         if (!long.TryParse(input, out long longValue))

@@ -282,7 +282,8 @@ namespace HospitalStatistics.Infrastructure.Services.Reports
                         TransferredToOtherDepartments = pm.TransferredToOtherDepartments ?? 0,
                         TotalAdmitted = pm.TotalAdmitted ?? 0,
                         FromVillagePatient = pm.FromVillagePatient ?? 0,
-                        MothersWithPatients = pm.MothersWithPatients ?? 0
+                        MothersWithPatients = pm.MothersWithPatients ?? 0,
+                        MothersDischarged = pm.MothersDischarged ?? 0
                     })
                     .ToListAsync(ct);
 
@@ -337,6 +338,7 @@ namespace HospitalStatistics.Infrastructure.Services.Reports
                         var admitted = g.Sum(x => x.TotalAdmitted);
                         var fromVillage = g.Sum(x => x.FromVillagePatient);
                         var mothers = g.Sum(x => x.MothersWithPatients);
+                        var dischargedMothers = g.Sum(x => x.MothersDischarged);
 
                         var dischargedPatients = discharged + died;
                         var treatedPatients = discharged + died + transferred;
@@ -381,6 +383,7 @@ namespace HospitalStatistics.Infrastructure.Services.Reports
                             FactBedDays = factBedDays,
                             FromVillage = fromVillage,
                             Mothers = mothers,
+                            DischargedMothers = dischargedMothers,
 
                             FulfillmentPercentage = fulfillmentPercentage,
                             AverageStay = averageStay,
@@ -416,6 +419,7 @@ namespace HospitalStatistics.Infrastructure.Services.Reports
                         FactBedDays = x.FactBedDays,
                         FromVillage = x.FromVillage,
                         Mothers = x.Mothers,
+                        DischargedMothers = x.DischargedMothers,
                         FulfillmentPercentage = x.FulfillmentPercentage,
                         AverageStay = x.AverageStay,
                         BedOccupancy = x.BedOccupancy,
@@ -430,6 +434,7 @@ namespace HospitalStatistics.Infrastructure.Services.Reports
                     var sumFact = deptTypes.Sum(x => x.FactBedDays);
                     var sumFromVillage = deptTypes.Sum(x => x.FromVillage);
                     var sumMothers = deptTypes.Sum(x => x.Mothers);
+                    var sumDischargedMothers = deptTypes.Sum(x => x.DischargedMothers);
 
                     var sumTreated = deptTypes.Sum(x => x.TreatedPatients);
                     var totalAverageBedCount = deptTypes.Sum(x => x.AverageBedCount);
@@ -471,6 +476,7 @@ namespace HospitalStatistics.Infrastructure.Services.Reports
                         FactBedDays = sumFact,
                         FromVillage = sumFromVillage,
                         Mothers = sumMothers,
+                        DischargedMothers = sumDischargedMothers,
                         FulfillmentPercentage = deptFulfillmentPercentage,
                         AverageStay = deptAverageStay,
                         BedOccupancy = deptBedOccupancy,
@@ -487,6 +493,7 @@ namespace HospitalStatistics.Infrastructure.Services.Reports
                 var generalFact = typeRows.Sum(x => x.FactBedDays);
                 var generalFromVillage = typeRows.Sum(x => x.FromVillage);
                 var generalMothers = typeRows.Sum(x => x.Mothers);
+                var generalDischargedMothers = typeRows.Sum(x => x.DischargedMothers);
 
                 var generalTreated = typeRows.Sum(x => x.TreatedPatients);
                 var hospitalAverageBedCount = typeRows.Sum(x => x.AverageBedCount);
@@ -528,6 +535,7 @@ namespace HospitalStatistics.Infrastructure.Services.Reports
                     FactBedDays = generalFact,
                     FromVillage = generalFromVillage,
                     Mothers = generalMothers,
+                    DischargedMothers = generalDischargedMothers,
                     FulfillmentPercentage = fulfillmentPercentage,
                     AverageStay = averageStay,
                     BedOccupancy = bedOccupancy,
@@ -617,6 +625,7 @@ namespace HospitalStatistics.Infrastructure.Services.Reports
             public int TotalAdmitted { get; set; }
             public int FromVillagePatient { get; set; }
             public int MothersWithPatients { get; set; }
+            public int MothersDischarged { get; set; }
         }
 
         private sealed class MovementJoinedPart1
@@ -677,6 +686,7 @@ namespace HospitalStatistics.Infrastructure.Services.Reports
             public int TotalAdmitted => Movement.TotalAdmitted;
             public int FromVillagePatient => Movement.FromVillagePatient;
             public int MothersWithPatients => Movement.MothersWithPatients;
+            public int MothersDischarged => Movement.MothersDischarged;
         }
 
         private sealed class TypeRowPart1
@@ -714,6 +724,7 @@ namespace HospitalStatistics.Infrastructure.Services.Reports
             public int FactBedDays { get; set; }
             public int FromVillage { get; set; }
             public int Mothers { get; set; }
+            public int DischargedMothers { get; set; }
 
             public decimal FulfillmentPercentage { get; set; }
             public decimal AverageStay { get; set; }

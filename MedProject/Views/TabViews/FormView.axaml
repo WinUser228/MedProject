@@ -441,8 +441,9 @@
         <DataGridTemplateColumn Width="92*">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <Grid ToolTip.Tip="{Binding PatientsAtStartOfDayErrorMessage}">
-                <TextBlock Text="{Binding PatientsAtStartOfDay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <Grid Background="Transparent" ToolTip.Tip="{Binding PatientsAtStartOfDayErrorMessage}">
+                <TextBlock Text="{Binding PatientsAtStartOfDay}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           IsHitTestVisible="False"/>
                 <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
                         IsVisible="{Binding HasPatientsAtStartOfDayError}"/>
               </Grid>
@@ -450,8 +451,9 @@
           </DataGridTemplateColumn.CellTemplate>
           <DataGridTemplateColumn.CellEditingTemplate>
             <DataTemplate>
-              <Grid Background="White">
+              <Grid Background="White" ToolTip.Tip="{Binding PatientsAtStartOfDayErrorMessage}">
                 <TextBox x:Name="PatientsAtStartOfDayEditor"
+                         ToolTip.Tip="{Binding PatientsAtStartOfDayErrorMessage}"
                          Text="{Binding PatientsAtStartOfDay,
                                         Converter={StaticResource StringToNullableIntConverter},
                                         Mode=TwoWay,
@@ -471,8 +473,9 @@
         <DataGridTemplateColumn Width="50*" MinWidth="58">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <Grid ToolTip.Tip="{Binding TotalAdmittedErrorMessage}">
-                <TextBlock Text="{Binding TotalAdmitted}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <Grid Background="Transparent" ToolTip.Tip="{Binding TotalAdmittedErrorMessage}">
+                <TextBlock Text="{Binding TotalAdmitted}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           IsHitTestVisible="False"/>
                 <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
                         IsVisible="{Binding HasTotalAdmittedError}"/>
               </Grid>
@@ -480,8 +483,9 @@
           </DataGridTemplateColumn.CellTemplate>
           <DataGridTemplateColumn.CellEditingTemplate>
             <DataTemplate>
-              <Grid Background="White">
+              <Grid Background="White" ToolTip.Tip="{Binding TotalAdmittedErrorMessage}">
                 <TextBox x:Name="TotalAdmittedEditor"
+                         ToolTip.Tip="{Binding TotalAdmittedErrorMessage}"
                          Text="{Binding TotalAdmitted,
                                         Converter={StaticResource StringToNullableIntConverter},
                                         Mode=TwoWay,
@@ -501,8 +505,9 @@
         <DataGridTemplateColumn Width="60*" MinWidth="64">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <Grid ToolTip.Tip="{Binding FromVillageErrorMessage}">
-                <TextBlock Text="{Binding FromVillage}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <Grid Background="Transparent" ToolTip.Tip="{Binding FromVillageErrorMessage}">
+                <TextBlock Text="{Binding FromVillage}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           IsHitTestVisible="False"/>
                 <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
                         IsVisible="{Binding HasFromVillageError}"/>
               </Grid>
@@ -510,8 +515,9 @@
           </DataGridTemplateColumn.CellTemplate>
           <DataGridTemplateColumn.CellEditingTemplate>
             <DataTemplate>
-              <Grid Background="White">
+              <Grid Background="White" ToolTip.Tip="{Binding FromVillageErrorMessage}">
                 <TextBox x:Name="FromVillageEditor"
+                         ToolTip.Tip="{Binding FromVillageErrorMessage}"
                          Text="{Binding FromVillage,
                                         Converter={StaticResource StringToNullableIntConverter},
                                         Mode=TwoWay,
@@ -531,8 +537,9 @@
         <DataGridTemplateColumn Width="70*">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <Grid ToolTip.Tip="{Binding ChildrenUnder14ErrorMessage}">
-                <TextBlock Text="{Binding ChildrenUnder14}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <Grid Background="Transparent" ToolTip.Tip="{Binding ChildrenUnder14ErrorMessage}">
+                <TextBlock Text="{Binding ChildrenUnder14}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           IsHitTestVisible="False"/>
                 <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
                         IsVisible="{Binding HasChildrenUnder14Error}"/>
               </Grid>
@@ -540,8 +547,9 @@
           </DataGridTemplateColumn.CellTemplate>
           <DataGridTemplateColumn.CellEditingTemplate>
             <DataTemplate>
-              <Grid Background="White">
+              <Grid Background="White" ToolTip.Tip="{Binding ChildrenUnder14ErrorMessage}">
                 <TextBox x:Name="ChildrenUnder14Editor"
+                         ToolTip.Tip="{Binding ChildrenUnder14ErrorMessage}"
                          Text="{Binding ChildrenUnder14,
                                         Converter={StaticResource StringToNullableIntConverter},
                                         Mode=TwoWay,
@@ -561,8 +569,9 @@
         <DataGridTemplateColumn Width="100*" MinWidth="104">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <Grid ToolTip.Tip="{Binding TransferredFromOtherDepartmentsErrorMessage}">
-                <TextBlock Text="{Binding TransferredFromOtherDepartments}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <Grid Background="Transparent" ToolTip.Tip="{Binding TransferredFromOtherDepartmentsErrorMessage}">
+                <TextBlock Text="{Binding TransferredFromOtherDepartments}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           IsHitTestVisible="False"/>
                 <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
                         IsVisible="{Binding HasTransferredFromOtherDepartmentsError}"/>
               </Grid>
@@ -570,8 +579,9 @@
           </DataGridTemplateColumn.CellTemplate>
           <DataGridTemplateColumn.CellEditingTemplate>
             <DataTemplate>
-              <Grid Background="White">
+              <Grid Background="White" ToolTip.Tip="{Binding TransferredFromOtherDepartmentsErrorMessage}">
                 <TextBox x:Name="TransferredFromOtherDepartmentsEditor"
+                         ToolTip.Tip="{Binding TransferredFromOtherDepartmentsErrorMessage}"
                          Text="{Binding TransferredFromOtherDepartments,
                                         Converter={StaticResource StringToNullableIntConverter},
                                         Mode=TwoWay,
@@ -591,8 +601,9 @@
         <DataGridTemplateColumn Width="100*" MinWidth="104">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <Grid ToolTip.Tip="{Binding TransferredToOtherDepartmentsErrorMessage}">
-                <TextBlock Text="{Binding TransferredToOtherDepartments}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <Grid Background="Transparent" ToolTip.Tip="{Binding TransferredToOtherDepartmentsErrorMessage}">
+                <TextBlock Text="{Binding TransferredToOtherDepartments}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           IsHitTestVisible="False"/>
                 <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
                         IsVisible="{Binding HasTransferredToOtherDepartmentsError}"/>
               </Grid>
@@ -600,8 +611,9 @@
           </DataGridTemplateColumn.CellTemplate>
           <DataGridTemplateColumn.CellEditingTemplate>
             <DataTemplate>
-              <Grid Background="White">
+              <Grid Background="White" ToolTip.Tip="{Binding TransferredToOtherDepartmentsErrorMessage}">
                 <TextBox x:Name="TransferredToOtherDepartmentsEditor"
+                         ToolTip.Tip="{Binding TransferredToOtherDepartmentsErrorMessage}"
                          Text="{Binding TransferredToOtherDepartments,
                                         Converter={StaticResource StringToNullableIntConverter},
                                         Mode=TwoWay,
@@ -621,8 +633,9 @@
         <DataGridTemplateColumn Width="50*" MinWidth="58">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <Grid ToolTip.Tip="{Binding TotalDischargedErrorMessage}">
-                <TextBlock Text="{Binding TotalDischarged}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <Grid Background="Transparent" ToolTip.Tip="{Binding TotalDischargedErrorMessage}">
+                <TextBlock Text="{Binding TotalDischarged}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           IsHitTestVisible="False"/>
                 <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
                         IsVisible="{Binding HasTotalDischargedError}"/>
               </Grid>
@@ -630,8 +643,9 @@
           </DataGridTemplateColumn.CellTemplate>
           <DataGridTemplateColumn.CellEditingTemplate>
             <DataTemplate>
-              <Grid Background="White">
+              <Grid Background="White" ToolTip.Tip="{Binding TotalDischargedErrorMessage}">
                 <TextBox x:Name="TotalDischargedEditor"
+                         ToolTip.Tip="{Binding TotalDischargedErrorMessage}"
                          Text="{Binding TotalDischarged,
                                         Converter={StaticResource StringToNullableIntConverter},
                                         Mode=TwoWay,
@@ -651,8 +665,9 @@
         <DataGridTemplateColumn Width="84*">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <Grid ToolTip.Tip="{Binding DischargedByTransferErrorMessage}">
-                <TextBlock Text="{Binding DischargedByTransfer}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <Grid Background="Transparent" ToolTip.Tip="{Binding DischargedByTransferErrorMessage}">
+                <TextBlock Text="{Binding DischargedByTransfer}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           IsHitTestVisible="False"/>
                 <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
                         IsVisible="{Binding HasDischargedByTransferError}"/>
               </Grid>
@@ -660,8 +675,9 @@
           </DataGridTemplateColumn.CellTemplate>
           <DataGridTemplateColumn.CellEditingTemplate>
             <DataTemplate>
-              <Grid Background="White">
+              <Grid Background="White" ToolTip.Tip="{Binding DischargedByTransferErrorMessage}">
                 <TextBox x:Name="DischargedByTransferEditor"
+                         ToolTip.Tip="{Binding DischargedByTransferErrorMessage}"
                          Text="{Binding DischargedByTransfer,
                                         Converter={StaticResource StringToNullableIntConverter},
                                         Mode=TwoWay,
@@ -681,8 +697,9 @@
         <DataGridTemplateColumn Width="50*" MinWidth="58">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <Grid ToolTip.Tip="{Binding DiedErrorMessage}">
-                <TextBlock Text="{Binding Died}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <Grid Background="Transparent" ToolTip.Tip="{Binding DiedErrorMessage}">
+                <TextBlock Text="{Binding Died}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           IsHitTestVisible="False"/>
                 <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
                         IsVisible="{Binding HasDiedError}"/>
               </Grid>
@@ -690,8 +707,9 @@
           </DataGridTemplateColumn.CellTemplate>
           <DataGridTemplateColumn.CellEditingTemplate>
             <DataTemplate>
-              <Grid Background="White">
+              <Grid Background="White" ToolTip.Tip="{Binding DiedErrorMessage}">
                 <TextBox x:Name="DiedEditor"
+                         ToolTip.Tip="{Binding DiedErrorMessage}"
                          Text="{Binding Died,
                                         Converter={StaticResource StringToNullableIntConverter},
                                         Mode=TwoWay,
@@ -719,8 +737,9 @@
         <DataGridTemplateColumn Width="90*">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <Grid ToolTip.Tip="{Binding FromVillagePatientErrorMessage}">
-                <TextBlock Text="{Binding FromVillagePatient}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <Grid Background="Transparent" ToolTip.Tip="{Binding FromVillagePatientErrorMessage}">
+                <TextBlock Text="{Binding FromVillagePatient}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           IsHitTestVisible="False"/>
                 <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
                         IsVisible="{Binding HasFromVillagePatientError}"/>
               </Grid>
@@ -728,8 +747,9 @@
           </DataGridTemplateColumn.CellTemplate>
           <DataGridTemplateColumn.CellEditingTemplate>
             <DataTemplate>
-              <Grid Background="White">
+              <Grid Background="White" ToolTip.Tip="{Binding FromVillagePatientErrorMessage}">
                 <TextBox x:Name="FromVillagePatientEditor"
+                         ToolTip.Tip="{Binding FromVillagePatientErrorMessage}"
                          Text="{Binding FromVillagePatient,
                                         Converter={StaticResource StringToNullableIntConverter},
                                         Mode=TwoWay,
@@ -749,8 +769,9 @@
         <DataGridTemplateColumn Width="70*">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <Grid ToolTip.Tip="{Binding MothersWithPatientsErrorMessage}">
-                <TextBlock Text="{Binding MothersWithPatients}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <Grid Background="Transparent" ToolTip.Tip="{Binding MothersWithPatientsErrorMessage}">
+                <TextBlock Text="{Binding MothersWithPatients}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           IsHitTestVisible="False"/>
                 <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
                         IsVisible="{Binding HasMothersWithPatientsError}"/>
               </Grid>
@@ -758,8 +779,9 @@
           </DataGridTemplateColumn.CellTemplate>
           <DataGridTemplateColumn.CellEditingTemplate>
             <DataTemplate>
-              <Grid Background="White">
+              <Grid Background="White" ToolTip.Tip="{Binding MothersWithPatientsErrorMessage}">
                 <TextBox x:Name="MothersWithPatientsEditor"
+                         ToolTip.Tip="{Binding MothersWithPatientsErrorMessage}"
                          Text="{Binding MothersWithPatients,
                                         Converter={StaticResource StringToNullableIntConverter},
                                         Mode=TwoWay,
@@ -779,8 +801,9 @@
         <DataGridTemplateColumn Width="70*">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <Grid ToolTip.Tip="{Binding MothersDischargedErrorMessage}">
-                <TextBlock Text="{Binding MothersDischarged}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <Grid Background="Transparent" ToolTip.Tip="{Binding MothersDischargedErrorMessage}">
+                <TextBlock Text="{Binding MothersDischarged}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           IsHitTestVisible="False"/>
                 <Border IsHitTestVisible="False" BorderBrush="#D32F2F" BorderThickness="1"
                         IsVisible="{Binding HasMothersDischargedError}"/>
               </Grid>
@@ -788,8 +811,9 @@
           </DataGridTemplateColumn.CellTemplate>
           <DataGridTemplateColumn.CellEditingTemplate>
             <DataTemplate>
-              <Grid Background="White">
+              <Grid Background="White" ToolTip.Tip="{Binding MothersDischargedErrorMessage}">
                 <TextBox x:Name="MothersDischargedEditor"
+                         ToolTip.Tip="{Binding MothersDischargedErrorMessage}"
                          Text="{Binding MothersDischarged,
                                         Converter={StaticResource StringToNullableIntConverter},
                                         Mode=TwoWay,
@@ -818,12 +842,16 @@
       <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
         <Button Width="210"
                 Command="{Binding OpenReportSevenCommand}"
+                ToolTip.Placement="Top"
+                ToolTip.VerticalOffset="0"
                 Margin="0,0,10,0">
           <ToolTip.Tip>Отчёт — движение больных (Ctrl+R)</ToolTip.Tip>
           <Button.Content>Отчёт - движение больных</Button.Content>
         </Button>
         <Button Width="160"
                 Command="{Binding OpenReportSevenPart2Command}"
+                ToolTip.Placement="Top"
+                ToolTip.VerticalOffset="0"
                 Margin="0,0,10,0">
           <ToolTip.Tip>Отчёт — работа коек (Ctrl+Shift+R)</ToolTip.Tip>
           <Button.Content>Отчёт - работа коек</Button.Content>
@@ -834,6 +862,8 @@
               Classes="primary"
               Width="150"
               Command="{Binding SaveReportEntriesCommand}"
+              ToolTip.Placement="Top"
+              ToolTip.VerticalOffset="0"
               HorizontalAlignment="Right"
               VerticalAlignment="Center"
               IsEnabled="{Binding CanSave}">

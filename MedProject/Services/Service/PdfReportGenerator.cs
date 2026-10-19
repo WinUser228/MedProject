@@ -274,19 +274,20 @@ public class PdfReportGenerator : IPdfReportGenerator
             table.Rows.LeftIndent = 0;
 
             table.AddColumn("0.5cm");
-            table.AddColumn("7.0cm");
+            table.AddColumn("6.2cm");
             table.AddColumn("1.4cm");
             table.AddColumn("1.4cm");
             table.AddColumn("1.4cm");
+            table.AddColumn("1.5cm");
+            table.AddColumn("1.5cm");
             table.AddColumn("1.6cm");
             table.AddColumn("1.6cm");
-            table.AddColumn("1.7cm");
-            table.AddColumn("1.7cm");
-            table.AddColumn("1.7cm");
-            table.AddColumn("1.7cm");
-            table.AddColumn("2cm");
             table.AddColumn("1.6cm");
-            table.AddColumn("2cm");
+            table.AddColumn("1.6cm");
+            table.AddColumn("1.8cm");
+            table.AddColumn("1.6cm");
+            table.AddColumn("1.5cm");
+            table.AddColumn("1.8cm");
 
             var rowH1 = table.AddRow();
             rowH1.HeightRule = RowHeightRule.AtLeast;
@@ -297,7 +298,8 @@ public class PdfReportGenerator : IPdfReportGenerator
             rowH1.Cells[5].AddParagraph("ПРОВЕДЕНО КОЙКО-ДНЕЙ"); rowH1.Cells[5].MergeRight = 1;
             rowH1.Cells[7].AddParagraph("ПОКАЗАТЕЛИ ЭФФЕКТИВНОСТИ"); rowH1.Cells[7].MergeRight = 3;
             rowH1.Cells[11].AddParagraph("ЛЕТАЛЬНОСТЬ %"); rowH1.Cells[11].MergeDown = 1;
-            rowH1.Cells[12].AddParagraph("БОЛЬНЫЕ"); rowH1.Cells[12].MergeRight = 1;
+            rowH1.Cells[12].AddParagraph("ВЫБЫЛО МАТЕРЕЙ"); rowH1.Cells[12].MergeDown = 1;
+            rowH1.Cells[13].AddParagraph("БОЛЬНЫЕ"); rowH1.Cells[13].MergeRight = 1;
 
             var rowH2 = table.AddRow();
             rowH2.HeightRule = RowHeightRule.AtLeast;
@@ -311,8 +313,8 @@ public class PdfReportGenerator : IPdfReportGenerator
             rowH2.Cells[8].AddParagraph("ЗАНЯТОСТЬ КОЙКИ (дн.)");
             rowH2.Cells[9].AddParagraph("ОБОРОТ КОЙКИ");
             rowH2.Cells[10].AddParagraph("СРЕД. ПРОСТОЙ КОЙКИ (дн.)");
-            rowH2.Cells[12].AddParagraph("ВЫБЫЛО");
-            rowH2.Cells[13].AddParagraph("ПОЛЬЗОВАННЫЕ");
+            rowH2.Cells[13].AddParagraph("ВЫБЫЛО");
+            rowH2.Cells[14].AddParagraph("ПОЛЬЗОВАННЫЕ");
 
             StyleHeaderRows(table, new[] { rowH1, rowH2 });
 
@@ -402,8 +404,9 @@ public class PdfReportGenerator : IPdfReportGenerator
         row.Cells[startCol + 7].AddParagraph(d.BedTurnover.ToString("N2"));
         row.Cells[startCol + 8].AddParagraph(d.AverageBedDowntime.ToString("N2"));
         row.Cells[startCol + 9].AddParagraph(d.MortalityRate.ToString("N2"));
-        row.Cells[startCol + 10].AddParagraph(d.DischargedPatients.ToString("N0"));
-        row.Cells[startCol + 11].AddParagraph(d.UsedPatients.ToString("N2"));
+        row.Cells[startCol + 10].AddParagraph(d.DischargedMothers.ToString("N0"));
+        row.Cells[startCol + 11].AddParagraph(d.DischargedPatients.ToString("N0"));
+        row.Cells[startCol + 12].AddParagraph(d.UsedPatients.ToString("N2"));
     }
 
     private static void StyleHeaderRows(Table table, Row[] rows)

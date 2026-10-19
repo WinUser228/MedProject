@@ -49,7 +49,6 @@ public partial class App : Application
             AppPaths.EnsureUserFiles();
 
             var appSettings = new AppSettings();
-            bool isFirstRun = appSettings.IsFirstRun;
 
             try
             {
@@ -80,9 +79,6 @@ public partial class App : Application
 
                 var mainWindow = ServiceProvider.GetRequiredService<Views.MainWindow>();
                 mainWindow.DataContext = ServiceProvider.GetRequiredService<NavigationViewModel>();
-
-                if (isFirstRun)
-                    appSettings.IsFirstRun = false;
 
                 desktop.MainWindow = mainWindow;
                 mainWindow.Show();

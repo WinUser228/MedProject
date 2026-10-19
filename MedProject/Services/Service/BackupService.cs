@@ -128,9 +128,7 @@ public class BackupService : IBackupService
             });
 
             Logger.Info($"BackupService: база восстановлена из {sourcePath} → {targetPath}");
-            await _messageService.ShowInfoAsync(
-                "База данных восстановлена из резервной копии.\n\nПриложение будет перезапущено.",
-                "Восстановление БД");
+            // Успешное действие: окно не показываем, просто перезапускаем приложение.
 
             TryRestartCurrentApplication();
             if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

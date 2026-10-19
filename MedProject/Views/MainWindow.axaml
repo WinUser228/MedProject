@@ -5,9 +5,10 @@
         x:DataType="vm:NavigationViewModel"
         Icon="avares://MedProject/Assets/iconApp.ico"
         Title="Коечный учёт"
+		WindowState="Maximized"
         WindowStartupLocation="CenterScreen"
-        MinWidth="1200" MinHeight="600"
-        Width="1400" Height="800">
+        MinWidth="1400" MinHeight="800"
+        >
 
   <Grid>
     <Border Background="#c9fffa">
@@ -56,7 +57,7 @@
                 </StackPanel>
               </ToolTip.Tip>
               <Grid>
-                <Image Source="avares://MedProject/Design/Image/folder.png"
+                <Image Source="avares://MedProject/Design/Image/note.png"
                        HorizontalAlignment="Left" VerticalAlignment="Center"
                        Height="30" Width="30" Margin="22,0,0,0" Stretch="Uniform"/>
                 <TextBlock Text="Справочники"

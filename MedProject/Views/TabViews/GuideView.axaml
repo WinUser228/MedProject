@@ -5,7 +5,8 @@
              xmlns:entities="clr-namespace:HospitalStatistics.Core.Entities;assembly=HospitalStatistics.Core"
              x:Class="MedProject.Views.TabViews.GuideView"
              x:DataType="vm:GuideViewModel"
-             x:CompileBindings="False">
+             x:CompileBindings="False"
+             Focusable="True">
 
   <UserControl.KeyBindings>
     <KeyBinding Gesture="Ctrl+N" Command="{Binding AddRecordCommand}" />
@@ -28,7 +29,7 @@
   </UserControl.Styles>
 
   <Grid>
-    <TabControl Margin="10" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}">
+    <TabControl x:Name="GuidesTabControl" Margin="10" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}">
 
       <!-- Отделения -->
       <TabItem Header="Отделения">
@@ -97,8 +98,12 @@
 
           <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
             <Button Command="{Binding AddRecordCommand}"
-                    Margin="0,0,10,0" Padding="10,5">
-              <ToolTip.Tip>Добавить запись (Ctrl+N)</ToolTip.Tip>
+                    Margin="0,0,10,0" Padding="10,5"
+                    ToolTip.Placement="Top"
+              ToolTip.VerticalOffset="0">
+              <ToolTip.Tip>Добавить запись (Ctrl+N)
+                            
+              </ToolTip.Tip>
               <Button.Content>Добавить запись</Button.Content>
             </Button>
           </StackPanel>
@@ -210,8 +215,12 @@
 
           <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
             <Button Command="{Binding AddRecordCommand}"
-                    Margin="0,0,10,0" Padding="10,5">
-              <ToolTip.Tip>Добавить запись (Ctrl+N)</ToolTip.Tip>
+                    Margin="0,0,10,0" Padding="10,5"
+                    ToolTip.Placement="Top"
+              ToolTip.VerticalOffset="0">
+              <ToolTip.Tip>Добавить запись (Ctrl+N)
+               
+              </ToolTip.Tip>
               <Button.Content>Добавить запись</Button.Content>
             </Button>
           </StackPanel>
@@ -285,8 +294,12 @@
 
           <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
             <Button Command="{Binding AddRecordCommand}"
-                    Margin="0,0,10,0" Padding="10,5">
-              <ToolTip.Tip>Добавить запись (Ctrl+N)</ToolTip.Tip>
+                    Margin="0,0,10,0" Padding="10,5"
+                    ToolTip.Placement="Top"
+              ToolTip.VerticalOffset="0">
+              <ToolTip.Tip>Добавить запись (Ctrl+N)
+               
+              </ToolTip.Tip>
               <Button.Content>Добавить запись</Button.Content>
             </Button>
           </StackPanel>

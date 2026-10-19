@@ -47,6 +47,9 @@ mkdir -p "${STAGE}"
 
 cp -a "${PUBLISH_DIR}" "${STAGE}/publish_linux"
 cp -a "${PKG_DIR}/medproject.desktop" "${STAGE}/medproject.desktop"
+cp -a "${PKG_DIR}/INSTALLATION_RedOS.md" "${STAGE}/INSTALLATION_RedOS.md"
+cp -a "${PKG_DIR}/iconApp.png" "${STAGE}/medproject.png"
+cp -a "${PKG_DIR}/create-desktop-shortcut.sh" "${STAGE}/create-desktop-shortcut.sh"
 
 # Prefer project icon; build script copies a known file from repo.
 ICON_SRC="${ROOT_DIR}/MedProject/Assets/iconApp.ico"
